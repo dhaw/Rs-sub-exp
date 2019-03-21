@@ -4,7 +4,9 @@ function f=RPHHnet(H,W)
 %w=W(:,[1,3]);
 %
 %H=sortrows(H,1);
+
 h=H(:,[1,4]);
+
 h1=h(:,1);%
 maxind=max(max(h));
 v=(1:maxind)';

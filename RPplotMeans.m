@@ -1,4 +1,4 @@
-function f=RPplotMeans(X,Y)%(f0stats,f3stats,f4stats,f5stats,f6stats)
+function f=RPplotMeans(X)%,Y)%(f0stats,f3stats,f4stats,f5stats,f6stats)
 numClus=4;
 la=length(X);
 plotMeans=zeros(numClus,la);
@@ -7,7 +7,7 @@ plotErrNeg=plotMeans;
 plotErrPos=plotMeans;
 for i=1:la
     mat=X{i};
-    mat2=Y{i};
+    %mat2=Y{i};
     plotMeans(:,i)=mat(:,6);%nanmean(mat,2);%mat(:,1);%1 for mean
     plotErr(:,i)=(mat(:,2));
     plotErrNeg(:,i)=mat(:,6)-mat(:,5);
@@ -67,7 +67,7 @@ xlabel('Order')
 ylabel('Clustering')
 grid on
 grid minor
-%
+%{
 yyaxis right
 plot(1:numClus,X(1,:),'--','linewidth',1.5)
 axis([.8,numClus+.2,-1,1])

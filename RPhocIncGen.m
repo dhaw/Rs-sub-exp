@@ -1,30 +1,67 @@
-function f=RP4plotsGrid(tvecin,yvecin,genvecin,genratin)%Row or column!
-%1=inc, 2=log inc, 3=gradloginc, 4=gen
-%all data in columns: dim=1
-numnodes=584396;
-int=10;%Plot every int'th as grey line
-tend=300;%400;
-%tend=tvec(end);
-%
-%Change 1st plot title accordingly
-alphas=[0,3,6];
-%alphas=(1:.2:2.2);
-la=length(alphas);
-%
-asp=1.5;%Aspect ratio - pbaspect 1st arg
-dim=1; otherdim=1+mod(dim,2);
-movav=0; movavnum=3;
-%[a,b]=size(yvec);
+function f=RPhocIncGen(peakOverFinal,inc,HH2)%,genSize,genRatio) ,clus
+TR=1;
+alpha=(0:6);
+la=length(alpha);
 
-col1=.7*[1,1,1];
-col2=.5*[0,0,1];
-fs=10; lw=2;
-figure
-%FigH=figure('DefaultAxesPosition',[0.1,0.1,0.8,0.8]);
-%suptitle(strcat('\alpha=',num2str(alpha)))
+%
+a=[alpha',[1,8,18,24,33,39,50]',[7,17,23,32,38,49,55]'];
+%Could automate - rows of next alpha?
+cols=[4,7];%10
+lcols=length(cols);
+H=HH2(:,6);
+
+X=inc;%(2:end,5:end);
+
+c=cell(1,la);
+cmean=zeros(la,lcols);
 for i=1:la
+    from=a(i,2); from=10*(from-1)+1;
+    to=a(i,3); to=10*to;
+    ci=X(from:to,cols);
+    c{i}=ci;
+    cmean(i,:)=nanmean(ci,1);
+end
+%}
+fs=12; lw=2;
+figure
+hold on
+min1=10^5; min2=min1;
+max1=0; max2=max1;
+runs=size(peakOverFinal,2);
+for i=1:la
+    %
+    ci=c{i};%cmean(i,:);%c{i};
+    y=TR*ci(:,1)./ci(:,2);
+    x=H(i)*ones(size(y));
+    scatter(x,y,'filled')
+    %min1=min([ci(:,1);min1]);
+    %max1=max([ci(:,1);max1]);
+    min2=min([y;min2]);
+    max2=max([y;max2]);
+    %}
+    %ci=clus{i}; xpoint=ci(4,1);
+    %scatter(xpoint*ones(1,runs),peakOverFinal(i,:),'filled')
+    %scatter(xpoint,mean(peakOverFinal(i,:)),'filled')
+end
+xlabel('CC^2 (households)','FontSize',fs);
+ylabel('Peak size/final size','FontSize',fs);
+%ylabel('T_R\times Peak size/final size','FontSize',fs);
+set(gca,'FontSize',fs);
+%set(gca,'LooseInset',get(gca,'TightInset'));
+%pbaspect([asp,1,1])
+axis ([0,.5,0,.026])%([0,.4,0,max2])
+legend('\alpha=0','\alpha=1','\alpha=2','\alpha=3','\alpha=4','\alpha=5','\alpha=6','location','NE')
+grid on
+grid minor
+box on
+hold off
+
+
+%{
+for i=1:2:7
+    for i=1:la
     tvec=tvecin{i};
-    yvec=yvecin{i}/numnodes;
+    yvec=yvecin{i};
     genvec=genvecin{i};
     genrat=genratin{i};
     alpha=alphas(i);
@@ -58,12 +95,11 @@ xlabel('Time (days)','FontSize',fs);
 if i==1
     ylabel('Incidence','FontSize',fs);
 end
-title(strcat('\alpha=',num2str(alpha)))
-%title(strcat(num2str(alpha),'<R_0<',num2str(alpha+.2)))%,'fontsize',15) strcat('\alpha=',num2str(alpha)))%
+title(strcat(num2str(alpha),'<R_0<',num2str(alpha+.2)))%,'fontsize',15) strcat('\alpha=',num2str(alpha)))%
 set(gca,'FontSize',fs);
 set(gca,'LooseInset',get(gca,'TightInset'));
 pbaspect([asp,1,1])
-axis([tvec(1),tend,0,10000/numnodes])
+axis([tvec(1),tend,0,10000])
 grid on
 grid minor
 box on
@@ -81,7 +117,7 @@ end
 set(gca,'FontSize',fs);
 set(gca,'LooseInset',get(gca,'TightInset'));
 pbaspect([asp,1,1])
-axis([tvec(1),tend,1/numnodes,10000/numnodes])
+axis([tvec(1),tend,1,10000])
 grid on
 grid minor
 box on
@@ -128,4 +164,4 @@ grid minor
 box on
 hold off
 end
-end
+%}
