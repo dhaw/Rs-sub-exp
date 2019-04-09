@@ -1,4 +1,5 @@
 function f=RPmclusPlotsError(X)
+%Input is RPcellMean(cCell)
 %numClus=1;
 clusmax=4;
 la=length(X);
@@ -38,10 +39,11 @@ h3=scatter(x1,m1(3,:),[],cmap(3,:),'^','linewidth',lw);
 h4=scatter(x1,m1(4,:),[],cmap(4,:),'s','linewidth',lw);
 hold off
 set(gca,'fontsize',fs)
-axis ([0,6,0,.35])
+axis ([0,6,0,.5])%.35])
 xlabel('Distance power \alpha')
-ylabel(strcat('CC^m (nodes)'))
+ylabel(strcat('CC^m (HH)'))
 legend([h1,h2,h3,h4],'m=1','m=2','m=3','m=4','location','NW')
+%legend([h1,h2],'m=1','m=2','location','NW')
 grid on
 grid minor
 box on

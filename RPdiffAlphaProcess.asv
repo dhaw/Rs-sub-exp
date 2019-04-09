@@ -1,21 +1,18 @@
 %Networks (for HOC - epidemics below):
 %
 function f=RPdiffAlphaProcess
-a=(5:1:6);%Alpha values
-ai=0;
-w=[60,100,140,180,220];
-lw=length(w);
-n=10000;%
+a=(0:1:6);%Alpha values 
+n=5000;
 la=length(a);
 reps=1;%Num of nets for each alpha;
-Gcell=cell(la,reps);%XX
-fpath='..\..\..\Downloads\SRebola\id_spatial_sim-master\scenarios\ebola\network\netDHh4w30pp2333r2p2_alpha';
-for i=1:la
-    ai=a(i);%XX
-    for j=1:reps
-    %
-        fname1=strcat(fpath,num2str(ai),'a_arcs.out');
-        fname2=strcat(fpath,num2str(ai),'a_nodes.out');
+Gcell=cell(la,reps);
+fpath='..\..\..\Downloads\SRebola\id_spatial_sim-master\scenarios\ebola\network\';
+for i=1:6:la
+    ai=a(i);
+    %for j=1:reps
+    %{
+        fname1=strcat(fpath,'netDH4_20_p35_2_alpha',num2str(ai),'_arcs.out');
+        fname2=strcat(fpath,'netDH4_20_p35_2_alpha',num2str(ai),'_nodes.out');
         arcs=load(fullfile(fname1)); %Households
         arcs=arcs(:,1);%1st column
         nodes=load(fullfile(fname2));
@@ -24,32 +21,31 @@ for i=1:la
         %DH2: netDH4_100_p08_2_alpha
         %DH3: netDH4_120_p05_2_alpha
         %DH4: netDH4_20_p35_2_alpha (h=3)
-        Gcell{i,j}=RPmakeNets(arcs,nodes,n);
-    end
+        %Gcell{i,j}=RPmakeNets(arcs,nodes,n);
+    %end
+    %}
     %
-    %{
-    fname1a=strcat(fpath,num2str(ai),'w',num2str(wi),'a_arcs.out');
-    fname2a=strcat(fpath,num2str(ai),'w',num2str(wi),'a_nodes.out');
-    fname1b=strcat(fpath,num2str(ai),'w',num2str(wi),'b_arcs.out');
-    fname2b=strcat(fpath,num2str(ai),'w',num2str(wi),'b_nodes.out');
-    fname1c=strcat(fpath,num2str(ai),'w',num2str(wi),'c_arcs.out');
-    fname2c=strcat(fpath,num2str(ai),'w',num2str(wi),'c_nodes.out');
+    fname1a=strcat(fpath,'SAwp_alpha',num2str(ai),'w',num2str(ai),'a_arcs.out');
+    fname2a=strcat(fpath,'SAwp_alpha',num2str(ai),'w',num2str(ai),'a_nodes.out');
+    fname1b=strcat(fpath,'SAwp_alpha',num2str(ai),'w',num2str(ai),'b_arcs.out');
+    fname2b=strcat(fpath,'SAwp_alpha',num2str(ai),'w',num2str(ai),'b_nodes.out');
+    fname1c=strcat(fpath,'SAwp_alpha',num2str(ai),'w',num2str(ai),'c_arcs.out');
+    fname2c=strcat(fpath,'SAwp_alpha',num2str(ai),'w',num2str(ai),'c_nodes.out');
     arcs=load(fullfile(fname1a)); arcs=arcs(:,1); nodes=load(fullfile(fname2a)); nodes=nodes(:,5);
     Gcell{i,1}=RPmakeNets(arcs,nodes,n);
-    arcs=load(fullfile(fname1b)); arcs=arcs(:,1); nodes=load(fullfile(fname2b)); nodes=nodes(:,5);
+    arcs=load(fullfile(fname1)); arcs=arcs(:,1); nodes=load(fullfile(fname2)); nodes=nodes(:,5);
     Gcell{i,2}=RPmakeNets(arcs,nodes,n);
-    arcs=load(fullfile(fname1c)); arcs=arcs(:,1); nodes=load(fullfile(fname2c)); nodes=nodes(:,5);
+    arcs=load(fullfile(fname1)); arcs=arcs(:,1); nodes=load(fullfile(fname2)); nodes=nodes(:,5);
     Gcell{i,3}=RPmakeNets(arcs,nodes,n);
     %}
 end
 f=Gcell;
-%save('allNetsDH4.mat','Gcell','-v7.3')%h_w_pw_R0
-save('DH1nets.mat','Gcell','-v7.3')%h_w_pw_R0
+save('allNetsDH4.mat','Gcell','-v7.3')%h_w_pw_R0
 %clearvars
 %}
 %%
 %Epidemics:
-%{
+%
 function [f,g,h]=RPdiffAlphaProcess
 a=(0:1:6);%Alpha values
 n=10000; lruns=10;
@@ -60,11 +56,9 @@ epi=cell(la,1);
 lepi=300;%(Max) length of incidence vector
 epiz=zeros(lepi,lruns);
 [epi{:}]=deal(epiz);
-fpath='..\..\..\Downloads\SRebola\id_spatial_sim-master\scenarios\ebola\output\epiDHh4w30pp2333r2p2_alpha';
 for i=1:la
     ai=a(i);
-    %events=importdata(strcat('DH_h4w120pp05_alpha',num2str(ai),'_pset_0_Events.out'));%,' ',1,0);
-    events=importdata(fullfile(strcat(fpath,num2str(ai),'_pset_0_Events.out')));
+    events=importdata(strcat('DH_h4w120pp05_alpha',num2str(ai),'_pset_0_Events.out'));%,' ',1,0);
     %DH1: DH4_30_p3_2_alpha
     %DH2: DH_h4w100pp08_alpha
     %DH_h4w120pp05_alpha

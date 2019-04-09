@@ -1,5 +1,5 @@
 function f=RPmakeNets(arcs,h2,n)%Single columns from SR's .out files
-
+%Not just HHS!
 wplaces=reshape(arcs,2,length(arcs)/2);
 G=wplaces'+1;
 Gsp=sparse(G(:,1),G(:,2),1,n,n);

@@ -1,0 +1,13 @@
+function f=RPcellMean1D(cell)
+%Mean over dim 
+[l1,l2]=size(cell);
+for i=1:l1
+    x=zeros(size(cell(i,1)),size(cell(i,1),2),l2);
+    for j=1:l2
+        x(:,:,j)=cell(i,j);
+    end
+    cellOut{i}=nanmean(x,3);
+end
+f=cellOut;
+
+    

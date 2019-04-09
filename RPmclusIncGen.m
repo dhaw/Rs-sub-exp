@@ -1,12 +1,15 @@
 function [f,g]=RPmclusIncGen(yCell,cCell)%ci are mean clustering order
-%yCell{i} - row for each alpha, cols for prak and final
-%cCell{i} - cell array - output from HPC
+%yCell{i} - row for each alpha, cols for peak and final
+%cCell{i} - cell array - output from HPC (so cCell is a cell array of cell
+%arrays)
+startfrom=2;%First order to fit - 2 for full nets, 1 for HHs
 TR=1;
 alpha=(0:6);
 la=length(alpha);
 ly=length(yCell);
 cCell1=cCell{1};
 clusmax=size(cCell1{1},1);%size(cCell{1},1);
+n=584396;
 
 PZ=zeros(la,ly);
 Cm=zeros(la,ly,clusmax);
@@ -22,7 +25,7 @@ for i=1:ly%For each different network structure
         ciMatj=ci{j};
        ciMat(j,:)=ciMatj(:,col);
     end
-    PZ(:,i)=yi(:,1)./yi(:,2);
+    PZ(:,i)=yi(:,1);%/n;%./yi(:,2);
     Cm(:,i,:)=ciMat;
 end
 
@@ -44,7 +47,7 @@ for j=1:clusmax
     coeffsj=polyfit(reg1(isnan(reg1)==0),reg2(isnan(reg1)==0),1);
     coeffs(j,:)=coeffsj;
     %
-    if j>=1
+    if j>=startfrom
         xline=[0,.5];
         yline=coeffsj(1)*xline+coeffsj(2);
         plot(xline,yline,'-','linewidth',2,'color',[.5,.5,.5]);
@@ -68,11 +71,11 @@ for j=1:clusmax
             plotcell{i}=scatter(x,-y,[],cmap(i,:),'filled','o','linewidth',lw);
     end
 end
-xlabel('Clustering','FontSize',fs);
-ylabel('Peak size/final size','FontSize',fs);
+xlabel('CC^m (nodes)','FontSize',fs);
+ylabel('Peak size')%/final size','FontSize',fs);
 set(gca,'FontSize',fs);
-axis ([0,.4,0,.02])%([0,.4,0,max2])
-legend([plotcell{:}],'\alpha=0','\alpha=1','\alpha=2','\alpha=3','\alpha=4','\alpha=5','\alpha=6','location','NE')
+axis ([0,.5,0,.03])%([.15,.5,.015,.03])%([0,.4,0,.02])%([0,.4,0,max2])
+legend([plotcell{:}],'\alpha=0','\alpha=1','\alpha=2','\alpha=3','\alpha=4','\alpha=5','\alpha=6','location','SW')
 grid on
 grid minor
 box on
